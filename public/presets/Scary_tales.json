@@ -1,0 +1,25 @@
+{
+    "tune": {
+        "gamename": "Страшные сказки",
+        "starthp": 0,
+        "maxhp": 10,
+        "minhp": 0,
+        "winway": "firstmax",
+        "uniquename": [],
+        "commonname": [],
+        "diceOne": [
+            1,
+            6
+        ],
+        "diceAll": [
+            1,
+            6
+        ],
+        "countdownSet": [
+            1,
+            0
+        ],
+        "stU": "",
+        "stC": ""
+    }
+}

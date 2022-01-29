@@ -1,0 +1,387 @@
+@color-back: #f0f0f0;
+@color-btn-add: #9ccc65;
+@color-btn-remove: #c62828;
+@color-btn-start: #FDD835;
+@color-btn-unique-on: #cde077;
+@color-btn-common-on: #77e077;
+@color-countdown-number: #002940;
+@color-countdown-message: #b70000;
+
+
+@pad: 5px;
+
+
+#game_container {
+	background: linear-gradient(90deg, #114470, #226680);
+	overflow: auto;
+    min-height: 100%;
+}
+
+.table2, .table3 {
+	width: 100%;
+	height: auto;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-content: center;
+	justify-content: space-around;
+}
+
+.card {
+	margin: 3px;
+	min-height: 100px;
+	flex: 1 1 40%;
+	max-width: 50%;
+	text-align: center;
+}
+.card > div {
+	border-radius: 0 0 6px 6px;
+}
+.hpbar {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-content: space-around;
+	justify-content: center;
+}
+.hpbar div {
+	padding: 0 @pad;
+	width: 50%;
+	color: #fff;
+	text-shadow: 1px 0 1px #000, 
+	0 1px 1px #000, 
+	-1px 0 1px #000, 
+	0 -1px 1px #000;
+}
+
+.status {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+	align-content: center;
+	justify-content: center;
+	align-items: stretch;
+}
+.status div {
+	padding: 3px;
+}
+
+.w100 {width:100%}
+.w50 {width: calc(50% - 6px)}
+.w33 {width: calc(33% - 6px)}
+.w25 {width: calc(25% - 6px);}
+.fs12 {font-size:12px;}
+.fs16 {font-size:16px;}
+.fs12, .fs16 {
+	line-height: 1em;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: stretch;
+	align-content: center;}
+.fs24 {font-size:24px;}
+
+button.unique, button.common {
+	text-transform:none;
+	white-space: normal;
+	line-height:normal;
+	height: 100%;
+	width: 100%;
+	letter-spacing:0;
+	padding: 1px 5px;
+	margin: 0;
+	border-radius: 6px;
+}
+button.unique.on {
+	background-color: @color-btn-unique-on;
+}
+button.common.on, .list .on {
+	background-color: @color-btn-common-on;
+}
+.newplayer .mui--clearfix {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: flex-start;
+	align-items: center;
+}
+.newplayer .mui--clearfix>.mui--pull-left, .diceset div, .countdownset div {
+	padding-right: 20px;
+}
+.mui-textfield > input {
+	min-width: 235px;
+}
+button img {
+	height: 100%;
+}
+
+button.start {
+	background-color: @color-btn-start;
+}
+button.start:hover {
+	background-color: @color-btn-start;
+}
+.mui-btn--fab {
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	min-height: 30px!important;
+	background-color: transparent;
+	margin: 6px 0;
+}
+
+.mui-btn--fab:hover {
+	background-color: transparent;
+	filter: brightness(1.1);
+}
+.mui-container {
+	padding:0;
+}
+.winsbar {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: right;
+	align-items: stretch;
+	padding: 3px 2px;
+	height: 34px;
+}
+.winsbar .player {
+	text-align: left;
+	width: 100%;
+}
+.winsbar .name {
+	writing-mode: vertical-rl;
+	transform: rotate(180deg);
+	font-size: 10px;
+	line-height: 0.7em;
+	padding: 0 4px;
+}
+.winsbar .dice {
+	z-index: 100;
+	position: absolute;
+	margin-right: 28px;
+	background-color: black;
+	color: white;
+	padding: 0 6px;
+	border-radius: 3px;
+}
+.winsbar .dice.on {
+	opacity: 1;	
+	transition: 2s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+.winsbar .dice.off {
+	opacity: 0;
+	transition: 0s;
+}
+.list {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	align-content: center;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+.list .select {
+	width: 200px;
+}
+.list .mui-btn.delete {
+	padding: 2px;
+	height: 36px;
+}
+.list .savedgames {
+	overflow-y: scroll;
+	overflow-x: hidden;
+	max-height: 400px;
+	margin: 10px auto;
+	max-width: 600px;
+}
+
+
+#game_container>.mui-panel {
+	background-color: #FFFFFF50;
+}
+.mui-appbar {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-content: center;
+	justify-content: flex-start;
+	align-items: flex-start;
+    padding: 10px 0 10px 0;	
+	background: linear-gradient(45deg, #114470, #226680);
+}
+.mui-appbar .block {
+	padding: 0px 10px 0 10px;
+	display: flex;
+	width: 100%;
+}
+.mui-appbar .mui--text-headline {
+	padding-bottom: 10px;
+}
+.sharepopup, .countdownpopup {
+	position: fixed;
+	width: 100%;
+	top: 0;
+	left: 0;
+	height: 100%;
+	z-index: 1000;
+	padding:0;
+	margin:0;
+	color: #000000de;
+}
+.hidden {display:none}
+.topicon {
+	height: 42px;
+	width: 42px;
+	padding: 5px;
+	margin: 0;	
+}
+.sharepopup .links {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	align-content: space-around;
+	justify-content: flex-start;
+	align-items: center;
+}
+.sharepopup .links button {
+	width: 300px;
+}
+.sharepopup .mui-btn--fab, .countdownpopup .mui-btn--fab {
+	margin-left: calc(100% - 32px);
+	z-index:1001;
+}
+.sharepopup .links div {
+	max-width: 300px;
+}
+.mui-btn a {
+	color: #000000de;
+}
+.disabled {
+	pointer-events: none;	
+}
+.dicedropped {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1000;
+	font-size: 200px;	
+}
+.dice, .dicedropped {
+	transition: 0s;
+}
+.dice .mui-btn--fab {
+	top: 0;
+	z-index: 1001;
+	position: absolute;
+	right: 0;
+}
+
+.countdown-title {
+	color: #396;
+	font-weight: 100;
+	font-size: 40px;
+	margin: 40px 0px 20px;
+}
+ 
+.countdown {
+	font-family: sans-serif;
+	color: #fff;
+	display: inline-block;
+	font-weight: 100;
+	text-align: center;
+	font-size: 100px;
+	display: flex;
+	justify-content: center;
+	margin: 100px 0;
+}
+ 
+.countdown-number {
+	padding: 10px;
+	border-radius: 3px;
+	background: @color-countdown-number;
+	display: inline-block;
+	margin: 5px;
+}
+ 
+.countdown-time {
+	padding: 15px;
+	border-radius: 3px;
+	background: @color-countdown-number - #111111;
+	display: inline-block;
+}
+ 
+.countdown-text {
+	display: block;
+	padding-top: 5px;
+	font-size: 16px;
+}
+.countdown-message {
+	display: none;
+	font-family: sans-serif;
+	color: @color-countdown-message;
+	font-weight: 100;
+	text-align: center;
+	font-size: 100px;
+	justify-content: center;
+	margin: 100px 0;
+}
+.countdown-message.end {
+	display: flex;
+}
+.countdown.end {
+	display: none;
+}
+.dead {
+	filter: grayscale(100%);
+}
+
+.areyousure {
+	position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #000000cc;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    z-index: 1000;
+}
+.areyousure .mui-panel {
+    margin: auto;
+}
+.bottom-button {
+	display: flex;
+	justify-content: center;
+}
+.bottom-button>.mui-btn {
+	margin: 6px 10px;
+	flex: 0 1 200px;
+}
+.circle-picker {
+    align-content: center;
+    justify-content: center;	
+}
+.circle-picker>span {
+	margin: 5px;
+}
+@media (max-width: 800px) {
+	.mui-appbar {
+		flex-direction: column;
+		padding-top: 0px;
+	}
+	.mui-appbar .mui--text-headline {
+		padding-bottom: 5px;
+	}
+	.bottom-button>.mui-btn {
+		padding: 5px 10px;
+		margin: 6px 5px;
+	}
+}

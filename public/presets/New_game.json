@@ -1,0 +1,24 @@
+{
+    "tune": {
+        "gamename": "Новая игра",
+        "starthp": 10,
+        "maxhp": 10,
+        "winway": "lastalive",
+        "uniquename": [],
+        "commonname": [],
+        "diceOne": [
+            1,
+            6
+        ],
+        "diceAll": [
+            1,
+            6
+        ],
+        "countdownSet": [
+            1,
+            0
+        ],
+        "stU": "",
+        "stC": ""
+    }
+}
