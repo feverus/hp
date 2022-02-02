@@ -1,12 +1,31 @@
 <?php
 header("Content-Type: application/json");
+
+function password() {				
+	$a = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'; 
+	$pass = ''; 
+	for ($i=0;$i<12;$i++) {
+		$pass.=$a[random_int(0, strlen($a)-1)]; 
+	}
+	return $pass;
+}
+
 $fc = trim($_GET['filename']);
 $fc = str_replace(array("'" , '"' , '\\' , '/'), ' ' , $fc);
-$pass = crc32($fc.'Ula7NG39PK');
+$fdir = explode('-',$fc)[0];
+$fc = str_replace(array("'" , '"' , '\\' , '/'), ' ' , $fc);
 $fcversion = explode('|', $_COOKIE['hpcookie|'.$fc]);
 $fcpass = trim($fcversion[1]); //пароль в куке
 $fcversion = trim($fcversion[2]); //версия в куке
-$filename = '../savedgames/'.$fc.'.json';
+mkdir('../savedgames/'.$fdir, 0777);
+$filename = '../savedgames/'.$fdir.'/'.$fc.'.json';
+if (!file_exists($filename)) {
+	$pass = password();
+} else {
+	$out = file($filename);
+	$pass = trim($out[1]);
+	unset($out);
+}
 if (($fcpass==$pass) or (!file_exists($filename))) {
 	if (isset($_GET['delete'])) {
 		setcookie('hpcookie|'.$fc, "", time()-3600, '/');
@@ -25,7 +44,7 @@ if (($fcpass==$pass) or (!file_exists($filename))) {
 				$fcversion = 0;
 			}
 			$fcversion++;
-			file_put_contents($filename, $fcversion."\r\n".$data);
+			file_put_contents($filename, $fcversion."\r\n".$pass."\r\n".$data);
 			echo $pass;
 		} else {
 			echo 'Error : слишком много данных';

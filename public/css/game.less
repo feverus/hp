@@ -55,7 +55,31 @@
 	-1px 0 1px #000, 
 	0 -1px 1px #000;
 }
-
+.hp:before {
+	content: "-";
+    font-size: 12px;
+    opacity: 0;
+}
+.hp.low:before {
+	content: "🔻";
+	font-size: 12px;
+	position: relative;
+	bottom: -3px;
+	width: 25px;
+    display: inline-block;
+    margin-left: -25px;	
+	opacity: 1;
+}
+.hp.high:after {
+	content: "🔺";
+	font-size: 12px;
+    position: relative;
+	bottom: 19px;
+	filter: invert(100%);
+	width: 25px;
+    display: inline-block;
+    margin-right: -25px;	
+}
 .status {
 	display: flex;
 	flex-wrap: wrap;

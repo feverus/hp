@@ -234,89 +234,93 @@ class Main extends React.Component {
 			let id = this.state.id;
 			let updated = false;
 			let fileNotFound = false;
+			let url="/hp/php/jsonload.php?filename=" + id;
+			console.log('JSON ');
 			if (id !== "start") {
 				console.log('запрашиваем JSON ' + id);
-				fetch(window.location.protocol+'//'+window.location.hostname+"/hp/php/jsonload.php?filename=" + id, { mode: "no-cors", cache: "no-store" })
-					.then(result => result.json())
-					.then((result) => {
-						console.log(result);
-						if ((result.a !== '0') & (result.a !== '404')) {
-							updated = true;
-							this.setState(prevState => ({ players: result.players, tune: result.tune }));
-						}
-						if ((result.a == '404')) {
-							updated = true;
-							fileNotFound = true;
-						}
-					})
-					.then(
-						(result) => {
-							if (updated) {
-								let c = this.state.players;
-								this.playersCopy = JSON.parse(JSON.stringify(c));
-								this.setState({
-									isLoaded: true
-								});
+				if (this.state.testmode) { url="/hp/test/test.json" }
+				fetch(url, { mode: "no-cors", cache: "no-store" })
+				.then(result => result.json())
+				.then((result) => {
+					if ((result.a !== '0') & (result.a !== '404')) {
+						updated = true;
+						this.playersCopy = JSON.parse(JSON.stringify(result.players));
+
+						//обновляем стили после загрузки новых данных
+						let stU = 'w100';
+						let stC = 'w100';
+						let arrU = result.tune.uniquename;
+						let arrC = result.tune.commonname;
+						let tune = result.tune;
+						let d = '';
+						if (arrU.length > 0) {
+							switch (arrU.length) {
+								case 2: case 4: stU = 'w50'; break;
+								case 3: case 5: case 6: case 9: stU = 'w33'; break;
+								case 8: case 10: case 7: stU = 'w25'; break;
 							}
-							if (fileNotFound) {
-								this.setState({
-									id: "start",mode: "setup"
-								})
-							}
-						},
-						(error) => {
-							if (updated) {
-								this.setState({
-									isLoaded: true,error,id: "start",mode: "setup"
-								})
-							}
+							if ((arrU.sort((a, b) => (b.length - a.length))[0].length > 15) ||
+								(findLongestWord(arrU.join(' ')) > 6)) { stU = 'w100'; }
+								tune.stU = stU;
 						}
-					)
+						if (arrC.length > 0) {
+							switch (arrC.length) {
+								case 2: case 4: stC = 'w50'; break;
+								case 3: case 5: case 6: case 9: stC = 'w33'; break;
+								case 8: case 10: case 7: stC = 'w25'; break;
+							}
+							if ((arrC.sort((a, b) => (b.length - a.length))[0].length > 15) ||
+								(findLongestWord(arrC.join(' ')) > 6)) { stC = 'w100'; }
+								tune.stC = stC;				
+						}
+						if ((this.state.pass == '') & ($_GET('id') !== false)) {
+							d = " disabled";
+						}
+
+						this.setState(prevState => ({ players: result.players, tune: tune, isLoaded: true, d:d }));
+						this.LowHighCalculate();
+					}
+					if ((result.a == '404')) {
+						updated = true;
+						fileNotFound = true;
+					}
+				})
+				.then(
+					(result) => {
+						console.log('- ');
+						if (fileNotFound) {
+							this.setState({
+								id: "start",mode: "setup"
+							})
+						}
+					},
+					(error) => {
+						if (updated) {
+							this.setState({
+								isLoaded: true,error,id: "start",mode: "setup"
+							})
+						}
+					}
+				)
 			} else {
+				console.log('start');
 				var date = new Date();
 				id = date.getDate() + '' + date.getMonth() + '' + date.getFullYear() + '-' + Math.floor(Math.random() * (1000000));
 				this.setState({
 					id: id,
 					isLoaded: true
 				})
-			}
-
-			//обновляем стили после загрузки новых данных
-			let stU = "w100";
-			let stC = "w100";
-			let arrU = this.state.tune.uniquename;
-			let arrC = this.state.tune.commonname;
-			if (arrU.length > 0) {
-				switch (arrU.length) {
-					case 2: case 4: stU = "w50"; break;
-					case 3: case 5: case 6: case 9: stU = "w33"; break;
-					case 8: case 10: case 7: stU = "w25"; break;
-				}
-				if ((arrU.sort((a, b) => (b.length - a.length))[0].length > 15) ||
-					(findLongestWord(arrU.join(' ')) > 6)) { stU = "w100"; }
-				this.state.tune.stU = stU;
-			}
-			if (arrC.length > 0) {
-				switch (arrC.length) {
-					case 2: case 4: stC = "w50"; break;
-					case 3: case 5: case 6: case 9: stC = "w33"; break;
-					case 8: case 10: case 7: stC = "w25"; break;
-				}
-				if ((arrC.sort((a, b) => (b.length - a.length))[0].length > 15) ||
-					(findLongestWord(arrC.join(' ')) > 6)) { stC = "w100"; }
-				this.state.tune.stC = stC;
-			}
-			if ((this.state.pass == "") & ($_GET('id') !== false)) {
-				this.state.d = " disabled";
-			}
-		};
+			}			
+		}
 		this.LoadJSONrepeat = () => {
-			{ /*this.LoadJSON();*/ }
+			if (!this.state.testmode) {
+				this.LoadJSON();
+			}
 		}
 		this.SendJSON = () => {
 			console.log('отправляем JSON на сервер');
 			let xhr = new XMLHttpRequest();
-			xhr.open("POST", window.location.protocol+'//'+window.location.hostname+"/hp/php/jsonsave.php?filename=" + this.state.id + "&pass=" + this.state.pass, false);
+			xhr.open("POST", "/hp/php/jsonsave.php?filename=" + this.state.id + "&pass=" + this.state.pass, false);
 			xhr.setRequestHeader("Content-Type", "application/json");
 			var data = JSON.stringify({ "players": this.state.players, "tune": this.state.tune });
 			xhr.send(data);
@@ -361,8 +365,8 @@ class Main extends React.Component {
 				.then((result) => {
 					this.setState({ tune: result.tune });
 				}
-				);
-		};
+				)
+		}
 
 		this.yesNo = (v) => {
 			this.setState({ "yes": v, "ask": false });
@@ -376,14 +380,16 @@ class Main extends React.Component {
 			this.playersCopy.map((player) => { high = (player.hp > high) ? player.hp : high; });
 			if (low == high) { low = -1; high = -1; }
 			this.setState({ low: low, high: high });
-		};
+		}
 		this.ChangeColor = (id, color) => {
 			let c=this.state;	
 			c.players[id].color=color;
 			this.setState(c);
 		};
 		this.playersCopy = [];
-		this.state = {
+
+		this.state = {	
+			testmode: false,
 			mode: "setup",
 			id: "start",
 			pass: "",
@@ -409,7 +415,7 @@ class Main extends React.Component {
 				stC: ""
 			},
 			players: [{ id: 0, name: nameGen(), wins: 0, points: 0, hp: 0, dice: -1, color: "#4060ff", unique: [], common: [] },
-			{ id: 1, name: nameGen(), wins: 0, points: 0, hp: 0, dice: -1, color: "#d02020", unique: [], common: [] }],
+					{ id: 1, name: nameGen(), wins: 0, points: 0, hp: 0, dice: -1, color: "#d02020", unique: [], common: [] }],
 			presets: {
 				name: [],
 				file: []
@@ -448,6 +454,8 @@ class Main extends React.Component {
 	}
 
 	render() {
+		//тестовый режим для отладки на локальном сервере
+		if ($_GET('testmode')!==false) {this.state.testmode=true;}
 		//если передан id открываем сразу игру		
 		const id = $_GET('id');
 		if ((this.state.id == "start") & (id !== false)) {

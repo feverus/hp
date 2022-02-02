@@ -59,8 +59,10 @@ class Card extends React.Component {
 		const ps = this.context.players.slice();
 		const id = this.props.id;
 		const p = ps[this.props.id];
-		const tune = this.context.tune;
+		const tune = this.context.tune;		
 		let stDead = ((tune.winway == "lastalive") & (p.hp == 0)) ? "dead" : "";
+		let stMinMaxHp = (p.hp == this.context.low) ? "hp low" : "hp";
+		stMinMaxHp = (p.hp == this.context.high) ? "hp high" : stMinMaxHp;
 		return (
 			<div style={{ backgroundImage: 'linear-gradient(180deg, ' + p.color + '11, ' + p.color + ')' }} className={stDead}>
 				<div style={{ backgroundColor: p.color }}>
@@ -70,7 +72,7 @@ class Card extends React.Component {
 					<Button variant="fab" className={"remove" + this.context.d} onClick={() => this.context.Hpminus(id)}>
 						<img src="/hp/icons/heart-decrease.png" alt="-"/>
 					</Button>
-					<div className="hp">{p.hp}</div>
+					<div className={stMinMaxHp}>{p.hp}</div>
 					<Button variant="fab" className={"add" + this.context.d} onClick={() => this.context.Hpplus(id)}>
 						<img src="/hp/icons/health-increase.png"  alt="+"/>
 					</Button>
