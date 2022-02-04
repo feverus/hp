@@ -11,7 +11,7 @@ import List from "./List"
 import ColorPicker from './ColorPicker'
 import { Appbar, Button, Container } from 'muicss/react'
 import { findLongestWord, $_GET, nameGen} from './get.js'
-import $, { timers } from 'jquery'
+import $ from 'jquery'
 
 const MainContext = React.createContext();
 

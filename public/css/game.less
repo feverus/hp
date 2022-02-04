@@ -4,7 +4,6 @@
 @color-btn-start: #FDD835;
 @color-btn-unique-on: #cde077;
 @color-btn-common-on: #77e077;
-@color-countdown-number: #002940;
 @color-countdown-message: #b70000;
 
 
@@ -257,7 +256,10 @@ button.start:hover {
 	margin:0;
 	color: #000000de;
 }
-.hidden {display:none}
+.countdownpopup {
+	background-color: #00182f;
+}
+.hidden {display: none !important;}
 .topicon {
 	height: 42px;
 	width: 42px;
@@ -307,6 +309,26 @@ button.start:hover {
 	right: 0;
 }
 
+.countdown-seconds-circle {
+	border-radius: 50%;
+	display: flex;
+	flex-direction: column;
+	height: 80vw;
+	width: 80vw;
+	max-width: 80vh;
+	max-height: 80vh;
+}
+.countdown-minutes-circle {
+	border-radius: 50%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 95vw;
+	width: 95vw;
+	max-width: 95vh;
+	max-height: 95vh;
+}
 .countdown-title {
 	color: #396;
 	font-weight: 100;
@@ -320,25 +342,27 @@ button.start:hover {
 	display: inline-block;
 	font-weight: 100;
 	text-align: center;
-	font-size: 100px;
 	display: flex;
 	justify-content: center;
-	margin: 100px 0;
+	background-color: #00182f;
 }
  
 .countdown-number {
-	padding: 10px;
-	border-radius: 3px;
-	background: @color-countdown-number;
-	display: inline-block;
-	margin: 5px;
+	height: 40vw;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	overflow: hidden;
+	transition: height 0.5s ease 0s, opacity 0s;
 }
- 
+.countdown-number.m {
+	height: 0; opacity: 0;
+}
+.countdown-number.s {
+	height: 80vw;
+}
 .countdown-time {
-	padding: 15px;
-	border-radius: 3px;
-	background: @color-countdown-number - #111111;
-	display: inline-block;
+	line-height: 0.8em;
 }
  
 .countdown-text {
@@ -352,7 +376,7 @@ button.start:hover {
 	color: @color-countdown-message;
 	font-weight: 100;
 	text-align: center;
-	font-size: 100px;
+	font-size: 50px;
 	justify-content: center;
 	margin: 100px 0;
 }

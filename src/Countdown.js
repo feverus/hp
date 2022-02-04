@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button, Panel } from 'muicss/react'
+import $ from 'jquery'
 
 class Countdown extends React.Component {
 	constructor(props) {
@@ -66,19 +67,33 @@ class Countdown extends React.Component {
 		}
 		if (this.state.display == "show") {
 			let st = (this.state.countDone == true) ? " end" : '';
+			let m = ""; let s = "";
+			if (this.state.minutes == 0) {
+				m = " m"; s = " s";
+			}
+			//для скрытия таймера при запуске
+			s = ((this.state.seconds == 0)&(this.state.minutes == 0)) ? " m" : s;
+			let fontSize = ($('#minutesText').width() / 2);
+			fontSize = (this.state.minutes !== 0) ? (fontSize * 0.9) : fontSize;			
+			fontSize = fontSize + 'px';
+			
 			return (
 				<Panel className="countdownpopup">
 					<Button variant="fab" onClick={() => (this.Reset())}>
 						<img src="/hp/icons/close.png" alt="X"></img>
 					</Button>
 					<div className={"countdown" + st}>
-						<div className="countdown-number">
-							<span className="minutes countdown-time">{this.state.minutes}</span>
-							<span className="countdown-text">Минут</span>
-						</div>
-						<div className="countdown-number">
-							<span className="seconds countdown-time">{this.state.seconds}</span>
-							<span className="countdown-text">Секунд</span>
+						<div className="countdown-minutes-circle" style={{ backgroundImage: "conic-gradient(#002940 "+(this.state.minutes * 6)+"deg, transparent 0)" }}>
+							<div className="countdown-seconds-circle" style={{ backgroundImage: "conic-gradient(#002940 "+(this.state.seconds * 6)+"deg, transparent 0)" }}>
+								<div className={"countdown-number"+m}>
+									<span className="minutes countdown-time" id="minutesText" style={{ fontSize: fontSize }}>{this.state.minutes}</span>
+									<span className="countdown-text">Минут</span>
+								</div>
+								<div className={"countdown-number"+s}>
+									<span className="seconds countdown-time" id="secondsText" style={{ fontSize: fontSize }}>{this.state.seconds}</span>
+									<span className="countdown-text">Секунд</span>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div className={"countdown-message" + st}>
