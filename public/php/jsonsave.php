@@ -22,9 +22,11 @@ $filename = '../savedgames/'.$fdir.'/'.$fc.'.json';
 if (!file_exists($filename)) {
 	$pass = password();
 } else {
+	flock($file,LOCK_EX);
 	$out = file($filename);
 	$pass = trim($out[1]);
 	unset($out);
+	flock($file,LOCK_UN);
 }
 if (($fcpass==$pass) or (!file_exists($filename))) {
 	if (isset($_GET['delete'])) {
@@ -44,7 +46,9 @@ if (($fcpass==$pass) or (!file_exists($filename))) {
 				$fcversion = 0;
 			}
 			$fcversion++;
+			flock($file,LOCK_EX);
 			file_put_contents($filename, $fcversion."\r\n".$pass."\r\n".$data);
+			flock($file,LOCK_UN);
 			echo $pass;
 		} else {
 			echo 'Error : слишком много данных';

@@ -11,7 +11,6 @@ import List from "./List"
 import ColorPicker from './ColorPicker'
 import { Appbar, Button, Container } from 'muicss/react'
 import { findLongestWord, $_GET, nameGen} from './get.js'
-import $ from 'jquery'
 
 const MainContext = React.createContext();
 
@@ -22,14 +21,15 @@ class Main extends React.Component {
 			let c = this.state;
 			c.mode = "game";
 			c.isLoaded = true;
-			setInterval(this.LoadJSONrepeat, 200);
 			c.players.forEach((p, id) => {
 				c.players[id].hp = c.tune.starthp;
 				c.players[id].common = c.tune.commonname.map(() => 0);
 				c.players[id].unique = c.tune.uniquename.map(() => 0);
 			})
 			this.setState(c);
-		};
+			this.SendJSON();
+			setInterval(this.LoadJSONrepeat, 200);			
+		}
 		this.EndRaund = (btnPressed = false) => {
 			let c = this.playersCopy;
 			let t = this.state.tune;
@@ -39,7 +39,7 @@ class Main extends React.Component {
 			if ((btnPressed == true) & (t.winway == "anytime")) {
 				c.forEach((p, id) => {
 					c[id].points = +c[id].points + c[id].hp;
-				});
+				})
 				winner = true;
 			}
 			//firstmax - побеждает первый набравший максимум (или несколько набравших)
@@ -50,7 +50,7 @@ class Main extends React.Component {
 						c[id].wins = +c[id].wins + 1;
 						winner = true;
 					}
-				});
+				})
 			}
 			//lastalive - побеждает последний оставшийся в живых (или никто)
 			if (t.winway == "lastalive") {
@@ -59,7 +59,7 @@ class Main extends React.Component {
 					if (c[id].hp > 0) {
 						alives++;
 					}
-				});
+				})
 				//остался только один - победитель или все проиграли			
 				if (alives < 2) {
 					winner = true;
@@ -67,22 +67,20 @@ class Main extends React.Component {
 						if (c[id].hp > 0) {
 							c[id].wins = +c[id].wins + 1;
 						}
-					});
+					})
 				}
 			}
 			this.playersCopy=c;
 			this.LowHighCalculate();
 			//если нет победителя, то сразу обновляем hp
 			if (!winner) {
-				console.log("1");
 				this.setState({ "players": c });
 				this.SendJSON();
 			} else {
 				//если найдены победители, просим подтверждения
-				console.log("2");
 				this.setState({ "ask": true });
 			}
-		};
+		}
 		//изменения hp, которые могут привести к концу раунда
 		this.Hpminus = (id) => {
 			let c = JSON.parse(JSON.stringify(this.state.players));
@@ -91,7 +89,7 @@ class Main extends React.Component {
 				this.playersCopy = c;
 			}
 			this.EndRaund();
-		};
+		}
 		this.Hpplus = (id) => {
 			let c = JSON.parse(JSON.stringify(this.state.players));
 			if (c[id].hp < this.state.tune.maxhp) {
@@ -99,7 +97,7 @@ class Main extends React.Component {
 				this.playersCopy = c;
 			}
 			this.EndRaund();
-		};
+		}
 		this.HpminusAll = () => {
 			let c = JSON.parse(JSON.stringify(this.state.players));
 			c.forEach((p, id) => {
@@ -109,7 +107,7 @@ class Main extends React.Component {
 			});
 			this.playersCopy = c;
 			this.EndRaund();
-		};
+		}
 		this.HpplusAll = () => {
 			let c = JSON.parse(JSON.stringify(this.state.players));
 			let maxhp = this.state.tune.maxhp;
@@ -118,66 +116,62 @@ class Main extends React.Component {
 					c[id].hp = +c[id].hp + 1;
 					this.playersCopy = c;
 				}
-			});
+			})
 			this.playersCopy = c;
 			this.EndRaund();
-		};
+		}
 		//
 		this.UniqueClick = (id, nomer) => {
 			let c = this.state.players;
 			c.forEach((p, id) => {
 				p.unique[nomer] = 0;
-			});
+			})
 			c[id].unique[nomer] = 1;
 			this.setState({ "players": c });
 			this.SendJSON();
-		};
+		}
 		this.CommonClick = (id, nomer) => {
 			let c = this.state.players;
 			c[id].common[nomer] = (c[id].common[nomer] == 1) ? 0 : 1;
 			this.setState({ "players": c });
 			this.SendJSON();
-		};
+		}
 		//блок функций для setup
 		//игроки:
 		this.ChangePlayerName = (id, newName) => {
 			let c = this.state.players; c[id].name = newName; this.setState({ "players": c });
-		};
-		this.AP = () => {
-			let colors = ["#4060ff", "#7020ff", "#d02020", "#ee6060", "#ff6020", "#ffc0b0", "#fff040", "#fff080", "#05d00d", "#7ad080", "#03b0f0", "#80d0f0", "#0040ff", "#a080ff", "#ff30ff", "#ffb0ff", "#707070", "#e0e0e0", "#705040", "#10ffff"];
-			this.setState(prevState => ({ players: [...prevState.players, { id: this.state.players.length, name: nameGen(), wins: 0, points: 0, hp: 0, color: colors[this.state.players.length*2], unique: [], common: [] }] }));
-		};
+		}
 		this.AddPlayer = () => {
+			let colors = ["#4060ff", "#7020ff", "#d02020", "#ee6060", "#ff6020", "#ffc0b0", "#fff040", "#fff080", "#05d00d", "#7ad080", "#03b0f0", "#80d0f0", "#0040ff", "#a080ff", "#ff30ff", "#ffb0ff", "#707070", "#e0e0e0", "#705040", "#10ffff"];
 			if (this.state.players.length < 8) {
 				return (
-					<Button variant="raised" className="mui--pull-left add" onClick={() => (this.AP())}>
+					<Button variant="raised" className="mui--pull-left add" onClick={() => 
+						(this.setState(prevState => ({ players: [...prevState.players, { id: this.state.players.length, name: nameGen(), wins: 0, points: 0, hp: 0, color: colors[this.state.players.length*2], unique: [], common: [] }] })))}>
 						Добавить</Button>
-				);
-			}
-		};
+			)}
+		}
 		this.RemovePlayer = () => {
 			if (this.state.players.length > 2) {
 				return (
 					<Button variant="raised" className="mui--pull-right remove" onClick={() => this.setState(this.state.players.splice(-1, 1))}>
 						Удалить</Button>
-				);
-			}
-		};
+			)}
+		}
 		//уникальные состояния
 		this.ChangeUniquename = (id, newName) => {
 			let c = this.state.tune; c.uniquename[id] = newName; this.setState({ "tune": c });
-		};
+		}
 		this.AU = () => {
 			let c = this.state.tune; c.uniquename = [...c.uniquename, '👑']; this.setState(c);
-		};
+		}
 		this.AddUniquename = () => {
 			if ((this.state.tune.uniquename.length + this.state.tune.commonname.length) < 10) {
 				return (
 					<Button variant="raised" className="mui--pull-left add" onClick={() => (this.AU())}>
 						Добавить</Button>
-				);
+				)
 			}
-		};
+		}
 		this.RU = () => {
 			let c = this.state.tune; c.uniquename.splice(-1, 1); this.setState(c);
 		};
@@ -186,46 +180,43 @@ class Main extends React.Component {
 				return (
 					<Button variant="raised" className="mui--pull-right remove" onClick={() => (this.RU())}>
 						Удалить </Button>
-				);
-			}
-		};
+			)}
+		}
 		//обычные состояния
 		this.ChangeCommonname = (id, newName) => {
 			let c = this.state.tune; c.commonname[id] = newName; this.setState({ "tune": c });
-		};
+		}
 		this.AC = () => {
 			let c = this.state.tune; c.commonname = [...c.commonname, '✔']; this.setState({ "tune": c });
-		};
+		}
 		this.AddCommonname = () => {
 			if ((this.state.tune.uniquename.length + this.state.tune.commonname.length) < 10) {
 				return (
 					<Button variant="raised" className="mui--pull-left add" onClick={() => (this.AC())}>
 						Добавить</Button>
-				);
-			}
-		};
+			)}
+		}
 		this.RC = () => {
 			let c = this.state.tune; c.commonname.splice(-1, 1); this.setState(c);
-		};
+		}
 		this.RemoveCommonname = () => {
 			if (this.state.tune.commonname.length > 0) {
 				return (
 					<Button variant="raised" className="mui--pull-right remove" onClick={() => (this.RC())}>
 						Удалить </Button>
-				);
-			}
-		};
+			)}
+		}
 		//все игроки кидают кости
 		this.DropDiceAll = () => {
 			let c = this.state.players;
 			if (c[0].dice !== -1) {
 				c.forEach((p, id) => {
 					p.dice = +0 - 1;
-				});
+				})
 			} else {
 				c.forEach((p, id) => {
 					p.dice = this.state.tune.diceAll[0] * (Math.floor(Math.random() * this.state.tune.diceAll[1]) + 1);
-				});
+				})
 			}
 			this.setState({ players: c });
 		};
@@ -329,19 +320,19 @@ class Main extends React.Component {
 			} else {
 				console.log(xhr.responseText);
 			}
-		};
+		}
 		//выбор игры в списке сохраненных
 		this.SelectGame = (id) => {
 			let c = this.state; c.id = id; this.setState(c);
-		};
+		}
 		//новая игра из окна выбора сохраненных
 		this.GoSetup = () => {
 			let c = this.state; c.mode = "setup"; this.setState(c);
-		};
+		}
 		//загрузка выбранной игры
 		this.GoGame = (nomer) => {
 			let c = this.state; c.id = c.savedGames[nomer][0]; c.pass = c.savedGames[nomer][2]; c.version = c.savedGames[nomer][3]; c.mode = "game"; this.setState(c);
-		};
+		}
 		//сброс игры и выход в Setup
 		this.LeaveGame = () => {
 			this.setState({
@@ -355,8 +346,8 @@ class Main extends React.Component {
 				tune: { gamename: "Новая игра", starthp: 5, maxhp: 10, winway: "lastalive", uniquename: [], commonname: [], diceOne: [1, 6], diceAll: [1, 6], countdownSet: [1, 0], stU: "", stC: "" },
 				players: [{ id: 0, name: nameGen(), wins: 0, points: 0, hp: 0, dice: -1, color: "#4060ff", unique: [], common: [] },
 				{ id: 1, name: nameGen(), wins: 0, points: 0, hp: 0, dice: -1, color: "#d02020", unique: [], common: [] }],
-			});
-		};
+			})
+		}
 		//загрузка настроек игры из файла пресетов
 		this.LoadPresets = (id) => {
 			console.log(this.state.presets.file[id]);
@@ -364,13 +355,12 @@ class Main extends React.Component {
 				.then(result => result.json())
 				.then((result) => {
 					this.setState({ tune: result.tune });
-				}
-				)
+				})
 		}
 
 		this.yesNo = (v) => {
 			this.setState({ "yes": v, "ask": false });
-		};
+		}
 		//ищем максимальное и минимальное значение hp
 		this.LowHighCalculate = () => {
 			let low = this.state.tune.maxhp;
@@ -385,7 +375,7 @@ class Main extends React.Component {
 			let c=this.state;	
 			c.players[id].color=color;
 			this.setState(c);
-		};
+		}
 		this.playersCopy = [];
 
 		this.state = {	
@@ -458,11 +448,12 @@ class Main extends React.Component {
 		if ($_GET('testmode')!==false) {this.state.testmode=true;}
 		//если передан id открываем сразу игру		
 		const id = $_GET('id');
-		if ((this.state.id == "start") & (id !== false)) {
-			this.setState({ mode: "game", id: id });
+		if ((this.state.id == "start") & (id !== false)) {			
 			const pass = $_GET('pass');
 			if (pass !== false) {
-				this.setState({ pass: pass });
+				this.setState({ mode: "game", id: id, pass: pass });
+			} else {
+				this.setState({ mode: "game", id: id });
 			}
 		}
 		if ((this.state.id == "start") & (this.state.savedGames.length == 0)) {
@@ -490,8 +481,7 @@ class Main extends React.Component {
 				.then(result => result.json())
 				.then((result) => {
 					this.setState({ id:id, presets: result });
-				}
-				)
+				})
 		}
 		if (this.state.mode == "game") {
 			//при согласии мастера завершаем раунд
