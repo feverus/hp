@@ -15,6 +15,7 @@ if (!file_exists($filename)) {
 $out = file($filename);
 if ($fcversion!==trim($out[0])) {
     unset($out[0]);
+    unset($out[1]);
     foreach ($out as $o) {
         echo $o."\r\n";
     }
