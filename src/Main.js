@@ -81,7 +81,7 @@ class Main extends React.Component {
 		}
 		//изменения hp, которые могут привести к концу раунда
 		this.Hpminus = (id) => {
-			clearTimeout(this.nextUpdate); this.nextUpdate = false;
+			this.PauseUpdate(true);
 			let c = JSON.parse(JSON.stringify(this.state.players));
 			if (c[id].hp > 0) {
 				c[id].hp = +c[id].hp - 1;
@@ -90,7 +90,7 @@ class Main extends React.Component {
 			this.EndRaund();
 		}
 		this.Hpplus = (id) => {
-			clearTimeout(this.nextUpdate); this.nextUpdate = false;
+			this.PauseUpdate(true);
 			let c = JSON.parse(JSON.stringify(this.state.players));
 			if (c[id].hp < this.state.tune.maxhp) {
 				c[id].hp = +c[id].hp + 1;
@@ -99,7 +99,7 @@ class Main extends React.Component {
 			this.EndRaund();
 		}
 		this.HpminusAll = () => {
-			clearTimeout(this.nextUpdate); this.nextUpdate = false;
+			this.PauseUpdate(true);
 			let c = JSON.parse(JSON.stringify(this.state.players));
 			c.forEach((p, id) => {
 				if (c[id].hp > 0) {
@@ -110,7 +110,7 @@ class Main extends React.Component {
 			this.EndRaund();
 		}
 		this.HpplusAll = () => {
-			clearTimeout(this.nextUpdate); this.nextUpdate = false;
+			this.PauseUpdate(true);
 			let c = JSON.parse(JSON.stringify(this.state.players));
 			let maxhp = this.state.tune.maxhp;
 			c.forEach((p, id) => {
@@ -124,7 +124,7 @@ class Main extends React.Component {
 		}
 		//
 		this.UniqueClick = (id, nomer) => {
-			clearTimeout(this.nextUpdate); this.nextUpdate = false;
+			this.PauseUpdate(true);
 			let c = this.state.players;
 			c.forEach((p, id) => {
 				p.unique[nomer] = 0;
@@ -133,7 +133,7 @@ class Main extends React.Component {
 			this.setState({ "players": c });
 		}
 		this.CommonClick = (id, nomer) => {
-			clearTimeout(this.nextUpdate); this.nextUpdate = false;
+			this.PauseUpdate(true);
 			let c = this.state.players;
 			c[id].common[nomer] = (c[id].common[nomer] == 1) ? 0 : 1;
 			this.setState({ "players": c });
@@ -226,7 +226,7 @@ class Main extends React.Component {
 		}
 		//загрузка и сохранение данных
 		this.LoadJSON = () => {
-			clearTimeout(this.nextUpdate); this.nextUpdate = false;
+			this.PauseUpdate(true);
 			let id = this.state.id;
 			let updated = false;
 			let fileNotFound = false;
@@ -307,7 +307,7 @@ class Main extends React.Component {
 					isLoaded: true
 				})
 			}		
-			this.nextUpdate = setTimeout(this.LoadJSONrepeat, 500);	
+			this.PauseUpdate(false);	
 		}
 		this.LoadJSONrepeat = () => {
 			if (!this.state.testmode) {
@@ -315,7 +315,6 @@ class Main extends React.Component {
 			}
 		}
 		this.SendJSON = () => {	
-			clearTimeout(this.nextUpdate); this.nextUpdate = false;		
 			console.log('отправляем JSON на сервер');
 			let xhr = new XMLHttpRequest();
 			xhr.open("POST", "/hp/php/jsonsave.php?filename=" + this.state.id + "&pass=" + this.state.pass, false);
@@ -329,7 +328,6 @@ class Main extends React.Component {
 			} else {
 				console.log(xhr.responseText);
 			}
-			this.nextUpdate = setTimeout(this.LoadJSONrepeat, 500);
 		}
 		//выбор игры в списке сохраненных
 		this.SelectGame = (id) => {
@@ -345,7 +343,7 @@ class Main extends React.Component {
 		}
 		//сброс игры и выход в Setup
 		this.LeaveGame = () => {
-			clearTimeout(this.nextUpdate); this.nextUpdate = false;
+			this.PauseUpdate(true);
 			this.setState({
 				mode: "setup",
 				id: "start",
@@ -510,8 +508,9 @@ class Main extends React.Component {
 				})
 		}
 		if (this.state.mode == "game") {
-			if ((this.state.pass !== '') & (this.nextUpdate === false) & (this.state.stopUpdate === false)) {
+			if ((this.state.pass !== '') & (this.nextUpdate === false) & (this.state.stopUpdate === false) & (this.state.ask === false)) {
 				this.SendJSON();
+				this.PauseUpdate(false);
 			}				
 			//при согласии мастера завершаем раунд
 			if (this.state.yes) {
