@@ -8,11 +8,21 @@ class DiceOne extends React.Component {
 			display: "hidden"
 		};
 	}
+
+	clickAny() {
+		if (this.context.players[0].dice === -1) {
+			this.context.PauseUpdate((this.context.stopUpdate===true)?false:true);		
+			this.context.InverseStopUpdate();
+		}
+		let s = (this.state.display==="show")?"hidden":"show";
+		this.setState({ display: s});
+	}
+
 	render() {
 		if (this.state.display == "hidden") {
 			return (
 				<div className="block dice">
-					<Button className="topicon dice" onClick={() => (this.setState({ display: "show" }))}>
+					<Button className="topicon dice" onClick={() => (this.clickAny())}>
 						<img src="/hp/icons/diceone.png"></img>
 					</Button>
 				</div>
@@ -22,10 +32,10 @@ class DiceOne extends React.Component {
 			let dice = this.context.tune.diceOne[0] * (Math.floor(Math.random() * this.context.tune.diceOne[1]) + 1);
 			return (
 				<div className="block dice">
-					<Button variant="fab" onClick={() => (this.setState({ display: "hidden" }))}>
+					<Button variant="fab" onClick={() => (this.clickAny())}>
 						<img src="/hp/icons/close.png" alt="X"></img>
 					</Button>
-					<Button className="topicon dicedropped" onClick={() => (this.setState({ display: "hidden" }))}>
+					<Button className="topicon dicedropped" onClick={() => (this.clickAny())}>
 						{dice}
 					</Button>
 				</div>

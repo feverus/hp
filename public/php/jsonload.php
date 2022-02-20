@@ -19,7 +19,7 @@ if ($fcversion<trim($out[0])) {
 	} else {
 		$gamename = 'Игра';
 	}	
-	setcookie('hpcookie|'.$fc, $gamename.'|'.$out[1].'|'.$out[0], time()+(3600*24*50), '/');
+	setcookie('hpcookie|'.$fc, $gamename.'|'.trim($out[1]).'|'.trim($out[0]), time()+(3600*24*50), '/');
     unset($out[0]);
     unset($out[1]);
     foreach ($out as $o) {
