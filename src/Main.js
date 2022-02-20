@@ -26,9 +26,7 @@ class Main extends React.Component {
 				c.players[id].common = c.tune.commonname.map(() => 0);
 				c.players[id].unique = c.tune.uniquename.map(() => 0);
 			})
-			this.setState(c);
-			this.SendJSON();
-			this.nextUpdate = setTimeout(this.LoadJSONrepeat, 1000);			
+			this.setState(c);			
 		}
 		this.EndRaund = (btnPressed = false) => {
 			let c = this.playersCopy;
@@ -75,7 +73,6 @@ class Main extends React.Component {
 			//если нет победителя, то сразу обновляем hp
 			if (!winner) {
 				this.setState({ "players": c });
-				this.SendJSON();
 			} else {
 				//если найдены победители, просим подтверждения
 				this.setState({ "ask": true });
@@ -133,14 +130,12 @@ class Main extends React.Component {
 			})
 			c[id].unique[nomer] = 1;
 			this.setState({ "players": c });
-			this.SendJSON();
 		}
 		this.CommonClick = (id, nomer) => {
 			clearTimeout(this.nextUpdate);
 			let c = this.state.players;
 			c[id].common[nomer] = (c[id].common[nomer] == 1) ? 0 : 1;
 			this.setState({ "players": c });
-			this.SendJSON();
 		}
 		//блок функций для setup
 		//игроки:
@@ -497,6 +492,9 @@ class Main extends React.Component {
 				})
 		}
 		if (this.state.mode == "game") {
+			if (this.state.pass !== '') {
+				this.SendJSON();
+			}				
 			//при согласии мастера завершаем раунд
 			if (this.state.yes) {
 				let c = this.playersCopy;
@@ -507,7 +505,6 @@ class Main extends React.Component {
 					c[id].common = t.commonname.map(() => 0);
 				});
 				this.setState({ "players": c, "yes": false });
-				this.SendJSON();
 			}
 			if (!this.state.isLoaded) {
 				this.LoadJSON();				
