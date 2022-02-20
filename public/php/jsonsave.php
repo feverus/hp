@@ -25,6 +25,7 @@ if (!file_exists($filename)) {
 	flock($file,LOCK_EX);
 	$out = file($filename);
 	$pass = trim($out[1]);
+	$fcversion = trim($out[0]); //версия в файле
 	unset($out);
 	flock($file,LOCK_UN);
 }

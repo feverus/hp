@@ -28,7 +28,7 @@ class Main extends React.Component {
 			})
 			this.setState(c);
 			this.SendJSON();
-			setInterval(this.LoadJSONrepeat, 200);			
+			this.nextUpdate = setTimeout(this.LoadJSONrepeat, 1000);			
 		}
 		this.EndRaund = (btnPressed = false) => {
 			let c = this.playersCopy;
@@ -83,6 +83,7 @@ class Main extends React.Component {
 		}
 		//изменения hp, которые могут привести к концу раунда
 		this.Hpminus = (id) => {
+			clearTimeout(this.nextUpdate);
 			let c = JSON.parse(JSON.stringify(this.state.players));
 			if (c[id].hp > 0) {
 				c[id].hp = +c[id].hp - 1;
@@ -91,6 +92,7 @@ class Main extends React.Component {
 			this.EndRaund();
 		}
 		this.Hpplus = (id) => {
+			clearTimeout(this.nextUpdate);
 			let c = JSON.parse(JSON.stringify(this.state.players));
 			if (c[id].hp < this.state.tune.maxhp) {
 				c[id].hp = +c[id].hp + 1;
@@ -99,6 +101,7 @@ class Main extends React.Component {
 			this.EndRaund();
 		}
 		this.HpminusAll = () => {
+			clearTimeout(this.nextUpdate);
 			let c = JSON.parse(JSON.stringify(this.state.players));
 			c.forEach((p, id) => {
 				if (c[id].hp > 0) {
@@ -109,6 +112,7 @@ class Main extends React.Component {
 			this.EndRaund();
 		}
 		this.HpplusAll = () => {
+			clearTimeout(this.nextUpdate);
 			let c = JSON.parse(JSON.stringify(this.state.players));
 			let maxhp = this.state.tune.maxhp;
 			c.forEach((p, id) => {
@@ -122,6 +126,7 @@ class Main extends React.Component {
 		}
 		//
 		this.UniqueClick = (id, nomer) => {
+			clearTimeout(this.nextUpdate);
 			let c = this.state.players;
 			c.forEach((p, id) => {
 				p.unique[nomer] = 0;
@@ -131,6 +136,7 @@ class Main extends React.Component {
 			this.SendJSON();
 		}
 		this.CommonClick = (id, nomer) => {
+			clearTimeout(this.nextUpdate);
 			let c = this.state.players;
 			c[id].common[nomer] = (c[id].common[nomer] == 1) ? 0 : 1;
 			this.setState({ "players": c });
@@ -222,6 +228,7 @@ class Main extends React.Component {
 		};
 		//загрузка и сохранение данных
 		this.LoadJSON = () => {
+			clearTimeout(this.nextUpdate);
 			let id = this.state.id;
 			let updated = false;
 			let fileNotFound = false;
@@ -301,14 +308,16 @@ class Main extends React.Component {
 					id: id,
 					isLoaded: true
 				})
-			}			
+			}		
+			this.nextUpdate = setTimeout(this.LoadJSONrepeat, 500);	
 		}
 		this.LoadJSONrepeat = () => {
 			if (!this.state.testmode) {
 				this.LoadJSON();
 			}
 		}
-		this.SendJSON = () => {
+		this.SendJSON = () => {	
+			clearTimeout(this.nextUpdate);		
 			console.log('отправляем JSON на сервер');
 			let xhr = new XMLHttpRequest();
 			xhr.open("POST", "/hp/php/jsonsave.php?filename=" + this.state.id + "&pass=" + this.state.pass, false);
@@ -320,6 +329,7 @@ class Main extends React.Component {
 			} else {
 				console.log(xhr.responseText);
 			}
+			this.nextUpdate = setTimeout(this.LoadJSONrepeat, 500);
 		}
 		//выбор игры в списке сохраненных
 		this.SelectGame = (id) => {
@@ -335,6 +345,7 @@ class Main extends React.Component {
 		}
 		//сброс игры и выход в Setup
 		this.LeaveGame = () => {
+			clearTimeout(this.nextUpdate);
 			this.setState({
 				mode: "setup",
 				id: "start",
@@ -377,6 +388,7 @@ class Main extends React.Component {
 			this.setState(c);
 		}
 		this.playersCopy = [];
+		nextUpdate = false;
 
 		this.state = {	
 			testmode: false,
@@ -391,6 +403,7 @@ class Main extends React.Component {
 			d: "",
 			yes: false,
 			ask: false,
+			
 			tune: {
 				gamename: "Новая игра",
 				starthp: 5,
@@ -497,8 +510,7 @@ class Main extends React.Component {
 				this.SendJSON();
 			}
 			if (!this.state.isLoaded) {
-				this.LoadJSON();
-				setInterval(this.LoadJSONrepeat, 200);
+				this.LoadJSON();				
 			}
 			let diceAllSrc = "/hp/icons/diceall.png";
 			if (this.state.players[0].dice !== -1) { diceAllSrc = "/hp/icons/diceclear.png"; }
