@@ -320,7 +320,9 @@ class Main extends React.Component {
 			var data = JSON.stringify({ "players": this.state.players, "tune": this.state.tune });
 			xhr.send(data);
 			if (xhr.responseText.indexOf('Error') == -1) {
-				this.setState({ pass: xhr.responseText });
+				if (this.state.pass!==xhr.responseText) {
+					this.setState({ pass: xhr.responseText });
+				}
 			} else {
 				console.log(xhr.responseText);
 			}
