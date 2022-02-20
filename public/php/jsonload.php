@@ -13,7 +13,13 @@ if (!file_exists($filename)) {
 }
 
 $out = file($filename);
-if ($fcversion!==trim($out[0])) {
+if ($fcversion<trim($out[0])) {
+	if (preg_match_all('/"gamename":"([^"]+)"/si', $out, $matches, PREG_PATTERN_ORDER)!==false) {
+		$gamename = trim($matches[1][0]);	
+	} else {
+		$gamename = 'Игра';
+	}	
+	setcookie('hpcookie|'.$fc, $gamename.'|'.$out[1].'|'.$out[0], time()+(3600*24*50), '/');
     unset($out[0]);
     unset($out[1]);
     foreach ($out as $o) {

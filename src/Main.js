@@ -388,7 +388,7 @@ class Main extends React.Component {
 			this.setState(c);
 		}
 		this.playersCopy = [];
-		nextUpdate = false;
+		this.nextUpdate = false;
 
 		this.state = {	
 			testmode: false,

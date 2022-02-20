@@ -14,9 +14,9 @@ $fc = trim($_GET['filename']);
 $fc = str_replace(array("'" , '"' , '\\' , '/'), ' ' , $fc);
 $fdir = explode('-',$fc)[0];
 $fc = str_replace(array("'" , '"' , '\\' , '/'), ' ' , $fc);
-$fcversion = explode('|', $_COOKIE['hpcookie|'.$fc]);
-$fcpass = trim($fcversion[1]); //пароль в куке
-$fcversion = trim($fcversion[2]); //версия в куке
+$fcversionC = explode('|', $_COOKIE['hpcookie|'.$fc]);
+$fcpass = trim($fcversionC[1]); //пароль в куке
+$fcversionC = trim($fcversionC[2]); //версия в куке
 mkdir('../savedgames/'.$fdir, 0777);
 $filename = '../savedgames/'.$fdir.'/'.$fc.'.json';
 if (!file_exists($filename)) {
