@@ -5,6 +5,9 @@ import { pxWidth } from './get.js'
 class Card extends React.Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			st: "start"
+		};
 	}
 	renderUnique(id, nomer) {
 		let st = "unique off";
@@ -26,14 +29,18 @@ class Card extends React.Component {
 			<Button className={st + this.context.d} onClick={() => this.context.CommonClick(id, nomer)}>
 				{this.context.tune.commonname[nomer]}
 			</Button>
-		);
+		)
 	}
-	renderWinsbar(p) {
-		let st = "mui--text-headline player";
+	renderWinsbar(p) {		
 		let st2 = "mui--text-headline dice on";
 		if (p.dice == -1) { st2 = "mui--text-headline dice off"; }
-		if (pxWidth(p.name, '24px') > 100) {
-			if (pxWidth(p.name, '16px') > 100) { st = st + " fs12"; } else { st = st + " fs16"; }
+		let st = this.state.st;
+		if (st==="start") {
+			st = "mui--text-headline player";
+			if (pxWidth(p.name, '24px') > 100) {
+				if (pxWidth(p.name, '16px') > 100) { st = st + " fs12"; } else { st = st + " fs16"; }
+			}
+			this.setState({st:st});
 		}
 		if (this.context.tune.winway == "anytime") {
 			return (
@@ -43,7 +50,7 @@ class Card extends React.Component {
 					<div className="mui--text-headline value">{p.points}</div>
 					<div className={st2}>{p.dice}</div>
 				</div>
-			);
+			)
 		} else {
 			return (
 				<div className="winsbar">
@@ -52,7 +59,7 @@ class Card extends React.Component {
 					<div className="mui--text-headline value">{p.wins}</div>
 					<div className={st2}>{p.dice}</div>
 				</div>
-			);
+			)
 		}
 	}
 	render() {
@@ -63,7 +70,7 @@ class Card extends React.Component {
 		let stDead = ((tune.winway == "lastalive") & (p.hp == 0)) ? "dead" : "";
 		let stMinMaxHp = (p.hp == this.context.low) ? "hp low" : "hp";
 		stMinMaxHp = (p.hp == this.context.high) ? "hp high" : stMinMaxHp;
-		stMinMaxHp = stMinMaxHp + "animate__animated animate__bounce";
+		stMinMaxHp = stMinMaxHp + " animate__animated animate__pulse";
 		return (
 			<div style={{ backgroundImage: 'linear-gradient(180deg, ' + p.color + '11, ' + p.color + ')' }} className={stDead}>
 				<div style={{ backgroundColor: p.color }}>
