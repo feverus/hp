@@ -515,7 +515,7 @@ class Main extends React.Component {
 				})
 		}
 		if (this.state.mode == "game") {
-			if ((this.state.pass !== '') & (this.context.update==="off") & (this.state.ask === false)) {
+			if ((this.state.pass !== '') & (this.state.update==="off") & (this.state.ask === false)) {
 				console.log('Автозапуск');
 				this.SendJSON();
 				this.PauseUpdate(false);
