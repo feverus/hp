@@ -238,8 +238,6 @@ class Main extends React.Component {
 				xhr.open("GET", url, false);
 				xhr.setRequestHeader("Cache-Control", "no-cache, no-store, max-age=0");
 				xhr.send();
-				console.log(xhr);
-				console.log(xhr.response);
 				let result = JSON.parse(xhr.response);
 				console.log('version: local ' + this.state.version + ', server: ' + result.version);
 				if ((result.a !== '0') & (result.a !== '404')) {
@@ -298,7 +296,7 @@ class Main extends React.Component {
 			this.PauseUpdate(false);	
 		}
 		this.LoadJSONrepeat = () => {
-			if ((!this.state.testmode) & (this.context.update==="on")) {
+			if ((!this.state.testmode) & (this.state.update==="on")) {
 				this.LoadJSON();
 			}
 		}
