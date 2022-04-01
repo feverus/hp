@@ -305,7 +305,7 @@ class Main extends React.Component {
 			console.log('отправляем JSON на сервер '+this.state.id);
 			let xhr = new XMLHttpRequest();
 			let ver = this.state.version + 1; //если данные успешно сохранятся, обновим локальную версию
-			xhr.open("POST", "/hp/php/jsonsave.php?filename=" + this.state.id + "&pass=" + this.state.pass, false);
+			xhr.open("POST", "/hp/php/jsonsave.php?filename=" + this.state.id + "&pass=" + this.state.pass + "&version=" + this.state.version, false);
 			xhr.setRequestHeader("Content-Type", "application/json");
 			var data = JSON.stringify({ "players": this.state.players, "tune": this.state.tune });
 			xhr.send(data);

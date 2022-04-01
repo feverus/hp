@@ -10,6 +10,9 @@ function password() {
 	return $pass;
 }
 
+$fcversionS = trim($_GET['version']);//версия в state
+
+
 $fc = trim($_GET['filename']);
 $fc = str_replace(array("'" , '"' , '\\' , '/'), ' ' , $fc);
 $fdir = explode('-',$fc)[0];
@@ -28,6 +31,10 @@ if (!file_exists($filename)) {
 	$fcversion = trim($out[0]); //версия в файле
 	unset($out);
 	flock($file,LOCK_UN);
+	if ($fcversion===$fcversionS) {
+		echo 'Error : версии совпадают';
+		exit;
+	}
 }
 if (($fcpass==$pass) or (!file_exists($filename))) {
 	if (isset($_GET['delete'])) {
