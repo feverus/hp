@@ -237,7 +237,7 @@ class Main extends React.Component {
 				fetch(url, { mode: "no-cors", cache: "no-store" })
 				.then(result => result.json())
 				.then((result) => {
-					console.log('version: local' + this.state.version + ', server: ' + result.version);
+					console.log('version: local ' + this.state.version + ', server: ' + result.version);
 					if ((result.a !== '0') & (result.a !== '404')) {
 						if (this.state.version < result.version) {
 							updated = true;
@@ -274,7 +274,7 @@ class Main extends React.Component {
 								d = " disabled";
 							}
 
-							this.setState(prevState => ({ players: result.players, tune: tune, isLoaded: true, d:d }));
+							this.setState(prevState => ({ players: result.players, tune: tune, isLoaded: true, d:d, version: result.version }));
 							this.LowHighCalculate();
 						}
 					}
@@ -319,13 +319,14 @@ class Main extends React.Component {
 		this.SendJSON = () => {	
 			console.log('отправляем JSON на сервер '+this.state.id);
 			let xhr = new XMLHttpRequest();
+			let ver = this.state.version + 1; //если данные успешно сохранятся, обновим локальную версию
 			xhr.open("POST", "/hp/php/jsonsave.php?filename=" + this.state.id + "&pass=" + this.state.pass, false);
 			xhr.setRequestHeader("Content-Type", "application/json");
 			var data = JSON.stringify({ "players": this.state.players, "tune": this.state.tune });
 			xhr.send(data);
 			if (xhr.responseText.indexOf('Error') == -1) {
 				if (this.state.pass!==xhr.responseText) {
-					this.setState({ pass: xhr.responseText });
+					this.setState({ pass: xhr.responseText, version: ver});
 				}
 			} else {
 				console.log(xhr.responseText);
@@ -341,7 +342,9 @@ class Main extends React.Component {
 		}
 		//загрузка выбранной игры
 		this.GoGame = (nomer) => {
-			let c = this.state; c.id = c.savedGames[nomer][0]; c.pass = c.savedGames[nomer][2]; c.version = c.savedGames[nomer][3]; c.mode = "game"; this.setState(c);
+			let c = this.state;
+			c.id = c.savedGames[nomer][0]; c.pass = c.savedGames[nomer][2]; c.version = c.savedGames[nomer][3]; c.mode = "game"; c.isLoaded=false;
+			this.setState(c);
 		}
 		//сброс игры и выход в Setup
 		this.LeaveGame = () => {
