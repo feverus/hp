@@ -317,7 +317,7 @@ class Main extends React.Component {
 			}
 		}
 		this.SendJSON = () => {	
-			console.log('отправляем JSON на сервер');
+			console.log('отправляем JSON на сервер '+this.state.id);
 			let xhr = new XMLHttpRequest();
 			xhr.open("POST", "/hp/php/jsonsave.php?filename=" + this.state.id + "&pass=" + this.state.pass, false);
 			xhr.setRequestHeader("Content-Type", "application/json");

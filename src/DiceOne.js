@@ -11,6 +11,7 @@ class DiceOne extends React.Component {
 
 	clickAny() {
 		console.log('this.context.nextUpdate '+this.context.nextUpdate);
+		console.log('this.context.nextUpdate '+this.context);
 		if (this.context.players[0].dice === -1) {
 			this.context.PauseUpdate((this.context.nextUpdate!==false)?true:false);	
 		}
