@@ -73,7 +73,7 @@ class Main extends React.Component {
 			this.LowHighCalculate();
 			//если нет победителя, то сразу обновляем hp
 			if (!winner) {
-				this.setState({ "players": c, "version": this.state.version+1});
+				this.setState({ "players": c, "version": +this.state.version+1});
 			} else {
 				//если найдены победители, просим подтверждения
 				this.setState({ "ask": true });
@@ -130,13 +130,13 @@ class Main extends React.Component {
 				p.unique[nomer] = 0;
 			})
 			c[id].unique[nomer] = 1;
-			this.setState({ "players": c, "version": this.state.version+1 });
+			this.setState({ "players": c, "version": +this.state.version+1 });
 		}
 		this.CommonClick = (id, nomer) => {
 			this.PauseUpdate(true);
 			let c = this.state.players;
 			c[id].common[nomer] = (c[id].common[nomer] == 1) ? 0 : 1;
-			this.setState({ "players": c, "version": this.state.version+1 });
+			this.setState({ "players": c, "version": +this.state.version+1 });
 		}
 		//блок функций для setup
 		//игроки:
@@ -221,7 +221,7 @@ class Main extends React.Component {
 					p.dice = this.state.tune.diceAll[0] * (Math.floor(Math.random() * this.state.tune.diceAll[1]) + 1);
 				})
 			}
-			this.setState({ players: c, "version": this.state.version+1});
+			this.setState({ players: c, "version": +this.state.version+1});
 		}
 		//загрузка и сохранение данных
 		this.LoadJSON = () => {
@@ -511,7 +511,7 @@ class Main extends React.Component {
 					c[id].unique = t.uniquename.map(() => 0);
 					c[id].common = t.commonname.map(() => 0);
 				});
-				this.setState({ "players": c, "yes": false, "version": this.state.version+1 });
+				this.setState({ "players": c, "yes": false, "version": +this.state.version+1 });
 			}
 			if ((this.state.pass !== '') & (this.state.update==="off") & (this.nextUpdate===false) & (this.state.ask === false) & (this.state.isLoaded===true)) {
 				console.log('Автозапуск');
