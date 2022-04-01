@@ -35,6 +35,10 @@ if (!file_exists($filename)) {
 		echo 'Error : версии совпадают';
 		exit;
 	}
+	if ($fcversion>$fcversionS) {
+		echo 'Error : версия на сервере новее';
+		exit;
+	}		
 }
 if (($fcpass==$pass) or (!file_exists($filename))) {
 	if (isset($_GET['delete'])) {

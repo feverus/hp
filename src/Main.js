@@ -241,7 +241,7 @@ class Main extends React.Component {
 				let result = JSON.parse(xhr.response);
 				console.log('version: local ' + this.state.version + ', server: ' + result.version);
 				if ((result.a !== '0') & (result.a !== '404')) {
-					if ((0+this.state.version) <= (0+result.version)) {
+					if ((+0+this.state.version) <= (+0+result.version)) {
 						console.log('синхронизация');
 						updated = true;
 						this.playersCopy = JSON.parse(JSON.stringify(result.players));
