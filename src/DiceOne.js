@@ -11,8 +11,7 @@ class DiceOne extends React.Component {
 
 	clickAny() {
 		if (this.context.players[0].dice === -1) {
-			this.context.PauseUpdate((this.context.stopUpdate===true)?false:true);		
-			this.context.InverseStopUpdate();
+			this.context.PauseUpdate((this.context.nextUpdate!==false)?true:false);	
 		}
 		let s = (this.state.display==="show")?"hidden":"show";
 		this.setState({ display: s});

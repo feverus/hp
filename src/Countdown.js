@@ -29,6 +29,7 @@ class Countdown extends React.Component {
 			}
 		};
 		this.InitializeClock = () => {
+			this.context.PauseUpdate((this.context.nextUpdate!==false)?true:false);
 			let c = this.context.tune.countdownSet;
 			this.setState({ endtime: new Date(Date.parse(new Date()) + c[0] * 60 * 1000 + c[1] * 1000) });
 			this.setState({ display: "show" });
