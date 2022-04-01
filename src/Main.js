@@ -73,7 +73,7 @@ class Main extends React.Component {
 			this.LowHighCalculate();
 			//если нет победителя, то сразу обновляем hp
 			if (!winner) {
-				this.setState({ "players": c });
+				this.setState({ "players": c, "version": this.state.version+1});
 			} else {
 				//если найдены победители, просим подтверждения
 				this.setState({ "ask": true });
@@ -130,13 +130,13 @@ class Main extends React.Component {
 				p.unique[nomer] = 0;
 			})
 			c[id].unique[nomer] = 1;
-			this.setState({ "players": c });
+			this.setState({ "players": c, "version": this.state.version+1 });
 		}
 		this.CommonClick = (id, nomer) => {
 			this.PauseUpdate(true);
 			let c = this.state.players;
 			c[id].common[nomer] = (c[id].common[nomer] == 1) ? 0 : 1;
-			this.setState({ "players": c });
+			this.setState({ "players": c, "version": this.state.version+1 });
 		}
 		//блок функций для setup
 		//игроки:
@@ -221,7 +221,7 @@ class Main extends React.Component {
 					p.dice = this.state.tune.diceAll[0] * (Math.floor(Math.random() * this.state.tune.diceAll[1]) + 1);
 				})
 			}
-			this.setState({ players: c});
+			this.setState({ players: c, "version": this.state.version+1});
 		}
 		//загрузка и сохранение данных
 		this.LoadJSON = () => {
@@ -304,14 +304,14 @@ class Main extends React.Component {
 		this.SendJSON = () => {	
 			console.log('отправляем JSON на сервер '+this.state.id);
 			let xhr = new XMLHttpRequest();
-			let ver = +this.state.version; //если данные успешно сохранятся, обновим локальную версию
+			let ver = +this.state.version;
 			xhr.open("POST", "/hp/php/jsonsave.php?filename=" + this.state.id + "&pass=" + this.state.pass + "&version=" + ver, false);
 			xhr.setRequestHeader("Content-Type", "application/json");
 			var data = JSON.stringify({ "players": this.state.players, "tune": this.state.tune });
 			xhr.send(data);
 			if (xhr.responseText.indexOf('Error') == -1) {
 				if (this.state.pass!==xhr.responseText) {
-					this.setState({ pass: xhr.responseText, version: ver});
+					this.setState({ pass: xhr.responseText});
 				}
 			} else {
 				console.log(xhr.responseText);
@@ -511,7 +511,7 @@ class Main extends React.Component {
 					c[id].unique = t.uniquename.map(() => 0);
 					c[id].common = t.commonname.map(() => 0);
 				});
-				this.setState({ "players": c, "yes": false });
+				this.setState({ "players": c, "yes": false, "version": this.state.version+1 });
 			}
 			if ((this.state.pass !== '') & (this.state.update==="off") & (this.nextUpdate===false) & (this.state.ask === false) & (this.state.isLoaded===true)) {
 				console.log('Автозапуск');
