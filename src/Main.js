@@ -234,72 +234,52 @@ class Main extends React.Component {
 			if (id !== "start") {
 				console.log('запрашиваем JSON ' + id);
 				if (this.state.testmode) { url="/hp/test/test.json" }
-				fetch(url, { mode: "no-cors", cache: "no-store" })
-				.then(result => result.json())
-				.then((result) => {
-					console.log('version: local ' + this.state.version + ', server: ' + result.version);
-					if ((result.a !== '0') & (result.a !== '404')) {
-						if (this.state.version <= result.version) {
-							updated = true;
-							this.playersCopy = JSON.parse(JSON.stringify(result.players));
-
-							//обновляем стили после загрузки новых данных
-							let stU = 'w100';
-							let stC = 'w100';
-							let arrU = result.tune.uniquename;
-							let arrC = result.tune.commonname;
-							let tune = result.tune;
-							let d = '';
-							if (arrU.length > 0) {
-								switch (arrU.length) {
-									case 2: case 4: stU = 'w50'; break;
-									case 3: case 5: case 6: case 9: stU = 'w33'; break;
-									case 8: case 10: case 7: stU = 'w25'; break;
-								}
-								if ((arrU.sort((a, b) => (b.length - a.length))[0].length > 15) ||
-									(findLongestWord(arrU.join(' ')) > 6)) { stU = 'w100'; }
-									tune.stU = stU;
-							}
-							if (arrC.length > 0) {
-								switch (arrC.length) {
-									case 2: case 4: stC = 'w50'; break;
-									case 3: case 5: case 6: case 9: stC = 'w33'; break;
-									case 8: case 10: case 7: stC = 'w25'; break;
-								}
-								if ((arrC.sort((a, b) => (b.length - a.length))[0].length > 15) ||
-									(findLongestWord(arrC.join(' ')) > 6)) { stC = 'w100'; }
-									tune.stC = stC;				
-							}
-							if ((this.state.pass == '') & ($_GET('id') !== false)) {
-								d = " disabled";
-							}
-
-							this.setState(prevState => ({ players: result.players, tune: tune, isLoaded: true, d:d, version: result.version }));
-							this.LowHighCalculate();
-						}
-					}
-					if ((result.a == '404')) {
+				let response = await fetch(url, { mode: "no-cors", cache: "no-store" });
+				let result = await response.json();
+				console.log('version: local ' + this.state.version + ', server: ' + result.version);
+				if ((result.a !== '0') & (result.a !== '404')) {
+					if (this.state.version <= result.version) {
 						updated = true;
-						fileNotFound = true;
-					}
-				})
-				.then(
-					(result) => {
-						console.log('- ');
-						if (fileNotFound) {
-							this.setState({
-								id: "start",mode: "setup"
-							})
+						this.playersCopy = JSON.parse(JSON.stringify(result.players));
+
+						//обновляем стили после загрузки новых данных
+						let stU = 'w100';
+						let stC = 'w100';
+						let arrU = result.tune.uniquename;
+						let arrC = result.tune.commonname;
+						let tune = result.tune;
+						let d = '';
+						if (arrU.length > 0) {
+							switch (arrU.length) {
+								case 2: case 4: stU = 'w50'; break;
+								case 3: case 5: case 6: case 9: stU = 'w33'; break;
+								case 8: case 10: case 7: stU = 'w25'; break;
+							}
+							if ((arrU.sort((a, b) => (b.length - a.length))[0].length > 15) ||
+								(findLongestWord(arrU.join(' ')) > 6)) { stU = 'w100'; }
+								tune.stU = stU;
 						}
-					},
-					(error) => {
-						if (updated) {
-							this.setState({
-								isLoaded: true,error,id: "start",mode: "setup"
-							})
+						if (arrC.length > 0) {
+							switch (arrC.length) {
+								case 2: case 4: stC = 'w50'; break;
+								case 3: case 5: case 6: case 9: stC = 'w33'; break;
+								case 8: case 10: case 7: stC = 'w25'; break;
+							}
+							if ((arrC.sort((a, b) => (b.length - a.length))[0].length > 15) ||
+								(findLongestWord(arrC.join(' ')) > 6)) { stC = 'w100'; }
+								tune.stC = stC;				
 						}
+						if ((this.state.pass == '') & ($_GET('id') !== false)) {
+							d = " disabled";
+						}
+
+						this.setState(prevState => ({ players: result.players, tune: tune, isLoaded: true, d:d, version: result.version }));
+						this.LowHighCalculate();
 					}
-				)
+				}
+				if ((result.a == '404')) {
+					this.setState({isLoaded: true,error:"error 404",id: "start",mode: "setup"});
+				}
 			} else {
 				console.log('start');
 				var date = new Date();
@@ -397,7 +377,7 @@ class Main extends React.Component {
 				console.log('STOP update');
 				this.setState({update: "off"});
 			} else {
-				this.nextUpdate = setTimeout(this.LoadJSONrepeat, 5000);
+				this.nextUpdate = setTimeout(this.LoadJSONrepeat, 500);
 				console.log('START update');
 				this.setState({update: "on"});
 			}			
@@ -529,9 +509,7 @@ class Main extends React.Component {
 				});
 				this.setState({ "players": c, "yes": false });
 			}
-			console.log('this.nextUpdate');	
-			console.log(this.nextUpdate);					
-			if ((this.state.pass !== '') & (this.state.update==="off") & (this.nextUpdate!==false) & (this.state.ask === false) & (this.state.isLoaded===true)) {
+			if ((this.state.pass !== '') & (this.state.update==="off") & (this.nextUpdate===false) & (this.state.ask === false) & (this.state.isLoaded===true)) {
 				console.log('Автозапуск');
 				this.SendJSON();
 				this.PauseUpdate(false);
