@@ -528,7 +528,9 @@ class Main extends React.Component {
 					c[id].common = t.commonname.map(() => 0);
 				});
 				this.setState({ "players": c, "yes": false });
-			}					
+			}
+			console.log('this.nextUpdate');	
+			console.log(this.nextUpdate);					
 			if ((this.state.pass !== '') & (this.state.update==="off") & (this.nextUpdate!==false) & (this.state.ask === false) & (this.state.isLoaded===true)) {
 				console.log('Автозапуск');
 				this.SendJSON();
