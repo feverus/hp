@@ -229,19 +229,19 @@ class Main extends React.Component {
 			let id = this.state.id;
 			let updated = false;
 			let fileNotFound = false;
-			let url="/hp/php/jsonload.php?filename=" + id;
+			let url="/hp/php/jsonload.php?filename=" + id + "&nocache" + Math.random().toString().split('.')[1];
 			if (id !== "start") {
-				console.log('запрашиваем JSON ' + id);
+				//console.log('запрашиваем JSON ' + id);
 				if (this.state.testmode) { url="/hp/test/test.json" }
 				let xhr = new XMLHttpRequest();
 				xhr.open("GET", url, false);
 				xhr.setRequestHeader("Cache-Control", "no-cache, no-store, max-age=0");
 				xhr.send();
 				let result = JSON.parse(xhr.response);
-				console.log('version: local ' + this.state.version + ', server: ' + result.version);
+				//console.log('version: local ' + this.state.version + ', server: ' + result.version);
 				if ((result.a !== '0') & (result.a !== '404')) {
 					if ((+0+this.state.version) < (+0+result.version)) {
-						console.log('синхронизация');
+						//console.log('синхронизация');
 						updated = true;
 						this.playersCopy = JSON.parse(JSON.stringify(result.players));
 
@@ -284,7 +284,7 @@ class Main extends React.Component {
 					this.setState({isLoaded: true,error:"error 404",id: "start",mode: "setup"});
 				}
 			} else {
-				console.log('start');
+				//console.log('start');
 				var date = new Date();
 				var month = +1+date.getMonth();
 				id = date.getDate() + '' + month + '' + date.getFullYear() + '-' + Math.floor(Math.random() * (1000000));
@@ -301,7 +301,7 @@ class Main extends React.Component {
 			}
 		}
 		this.SendJSON = () => {	
-			console.log('отправляем JSON на сервер '+this.state.id);
+			//console.log('отправляем JSON на сервер '+this.state.id);
 			let xhr = new XMLHttpRequest();
 			let ver = +this.state.version;
 			xhr.open("POST", "/hp/php/jsonsave.php?filename=" + this.state.id + "&pass=" + this.state.pass + "&version=" + ver, false);
@@ -348,7 +348,7 @@ class Main extends React.Component {
 		}
 		//загрузка настроек игры из файла пресетов
 		this.LoadPresets = (id) => {
-			console.log(this.state.presets.file[id]);
+			//console.log(this.state.presets.file[id]);
 			fetch("/hp/presets/" + this.state.presets.file[id] + ".json", { cache: "no-store" })
 				.then(result => result.json())
 				.then((result) => {

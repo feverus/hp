@@ -35,7 +35,7 @@ if (!file_exists($filename)) {
 		echo 'Error : версии совпадают';
 		exit;
 	}
-	if (($fcversion>$fcversionS) and (isset($_GET['delete']))) {
+	if (($fcversion>$fcversionS) and (!isset($_GET['delete']))) {
 		echo 'Error : версия на сервере новее';
 		exit;
 	}		
