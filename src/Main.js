@@ -392,7 +392,7 @@ class Main extends React.Component {
 				clearTimeout(this.nextUpdate); this.nextUpdate = false;
 				console.log('STOP update');
 			} else {
-				this.nextUpdate = setTimeout(this.LoadJSONrepeat, 50000);
+				this.nextUpdate = setTimeout(this.LoadJSONrepeat, 5000);
 				console.log('START update');
 			}			
 		}
