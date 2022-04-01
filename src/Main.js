@@ -237,43 +237,46 @@ class Main extends React.Component {
 				fetch(url, { mode: "no-cors", cache: "no-store" })
 				.then(result => result.json())
 				.then((result) => {
+					console.log('version: local' + this.state.version + ', server: ' + result.version);
 					if ((result.a !== '0') & (result.a !== '404')) {
-						updated = true;
-						this.playersCopy = JSON.parse(JSON.stringify(result.players));
+						if (this.state.version < result.version) {
+							updated = true;
+							this.playersCopy = JSON.parse(JSON.stringify(result.players));
 
-						//обновляем стили после загрузки новых данных
-						let stU = 'w100';
-						let stC = 'w100';
-						let arrU = result.tune.uniquename;
-						let arrC = result.tune.commonname;
-						let tune = result.tune;
-						let d = '';
-						if (arrU.length > 0) {
-							switch (arrU.length) {
-								case 2: case 4: stU = 'w50'; break;
-								case 3: case 5: case 6: case 9: stU = 'w33'; break;
-								case 8: case 10: case 7: stU = 'w25'; break;
+							//обновляем стили после загрузки новых данных
+							let stU = 'w100';
+							let stC = 'w100';
+							let arrU = result.tune.uniquename;
+							let arrC = result.tune.commonname;
+							let tune = result.tune;
+							let d = '';
+							if (arrU.length > 0) {
+								switch (arrU.length) {
+									case 2: case 4: stU = 'w50'; break;
+									case 3: case 5: case 6: case 9: stU = 'w33'; break;
+									case 8: case 10: case 7: stU = 'w25'; break;
+								}
+								if ((arrU.sort((a, b) => (b.length - a.length))[0].length > 15) ||
+									(findLongestWord(arrU.join(' ')) > 6)) { stU = 'w100'; }
+									tune.stU = stU;
 							}
-							if ((arrU.sort((a, b) => (b.length - a.length))[0].length > 15) ||
-								(findLongestWord(arrU.join(' ')) > 6)) { stU = 'w100'; }
-								tune.stU = stU;
-						}
-						if (arrC.length > 0) {
-							switch (arrC.length) {
-								case 2: case 4: stC = 'w50'; break;
-								case 3: case 5: case 6: case 9: stC = 'w33'; break;
-								case 8: case 10: case 7: stC = 'w25'; break;
+							if (arrC.length > 0) {
+								switch (arrC.length) {
+									case 2: case 4: stC = 'w50'; break;
+									case 3: case 5: case 6: case 9: stC = 'w33'; break;
+									case 8: case 10: case 7: stC = 'w25'; break;
+								}
+								if ((arrC.sort((a, b) => (b.length - a.length))[0].length > 15) ||
+									(findLongestWord(arrC.join(' ')) > 6)) { stC = 'w100'; }
+									tune.stC = stC;				
 							}
-							if ((arrC.sort((a, b) => (b.length - a.length))[0].length > 15) ||
-								(findLongestWord(arrC.join(' ')) > 6)) { stC = 'w100'; }
-								tune.stC = stC;				
-						}
-						if ((this.state.pass == '') & ($_GET('id') !== false)) {
-							d = " disabled";
-						}
+							if ((this.state.pass == '') & ($_GET('id') !== false)) {
+								d = " disabled";
+							}
 
-						this.setState(prevState => ({ players: result.players, tune: tune, isLoaded: true, d:d }));
-						this.LowHighCalculate();
+							this.setState(prevState => ({ players: result.players, tune: tune, isLoaded: true, d:d }));
+							this.LowHighCalculate();
+						}
 					}
 					if ((result.a == '404')) {
 						updated = true;
@@ -389,7 +392,7 @@ class Main extends React.Component {
 				clearTimeout(this.nextUpdate); this.nextUpdate = false;
 				console.log('STOP update');
 			} else {
-				this.nextUpdate = setTimeout(this.LoadJSONrepeat, 500);
+				this.nextUpdate = setTimeout(this.LoadJSONrepeat, 50000);
 				console.log('START update');
 			}			
 		}
