@@ -234,8 +234,13 @@ class Main extends React.Component {
 			if (id !== "start") {
 				console.log('запрашиваем JSON ' + id);
 				if (this.state.testmode) { url="/hp/test/test.json" }
-				let response = await fetch(url, { mode: "no-cors", cache: "no-store" });
-				let result = await response.json();
+				let xhr = new XMLHttpRequest();
+				xhr.open("GET", url, false);
+				xhr.setRequestHeader("Content-Type", "application/json");
+				xhr.setRequestHeader("Cache-Control", "no-cache, no-store, max-age=0");
+				xhr.responseType = 'json';
+				xhr.send();
+				let result = await xhr.responseText;
 				console.log('version: local ' + this.state.version + ', server: ' + result.version);
 				if ((result.a !== '0') & (result.a !== '404')) {
 					if (this.state.version <= result.version) {
