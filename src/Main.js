@@ -216,13 +216,12 @@ class Main extends React.Component {
 				c.forEach((p, id) => {
 					p.dice = +0 - 1;
 				});
-				this.PauseUpdate(false);
 			} else {
 				c.forEach((p, id) => {
 					p.dice = this.state.tune.diceAll[0] * (Math.floor(Math.random() * this.state.tune.diceAll[1]) + 1);
 				})
 			}
-			this.setState({ players: c, stopUpdate: (this.state.stopUpdate===true)?false:true });
+			this.setState({ players: c});
 		}
 		//загрузка и сохранение данных
 		this.LoadJSON = () => {
@@ -310,7 +309,7 @@ class Main extends React.Component {
 			this.PauseUpdate(false);	
 		}
 		this.LoadJSONrepeat = () => {
-			if (!this.state.testmode) {
+			if ((!this.state.testmode) & (this.nextUpdate !== false)) {
 				this.LoadJSON();
 			}
 		}
@@ -388,20 +387,18 @@ class Main extends React.Component {
 		this.PauseUpdate = (f) => {
 			if (f) {
 				clearTimeout(this.nextUpdate); this.nextUpdate = false;
+				console.log('STOP update');
 			} else {
 				this.nextUpdate = setTimeout(this.LoadJSONrepeat, 500);
+				console.log('START update');
 			}			
 		}
-		this.InverseStopUpdate = () => {
-			this.setState({stopUpdate: (this.state.stopUpdate===true)?false:true});			
-		}		
 		this.playersCopy = [];
 		this.nextUpdate = false;
 
 		this.state = {	
 			testmode: false,
 			mode: "setup",
-			stopUpdate: false,
 			id: "start",
 			pass: "",
 			version: 0,
@@ -462,8 +459,7 @@ class Main extends React.Component {
 			LoadJSON: this.LoadJSON,
 			LoadJSONrepeat: this.LoadJSONrepeat,
 			SendJSON: this.SendJSON,
-			PauseUpdate: this.PauseUpdate,
-			InverseStopUpdate: this.InverseStopUpdate
+			PauseUpdate: this.PauseUpdate
 		}
 	}
 
@@ -508,7 +504,7 @@ class Main extends React.Component {
 				})
 		}
 		if (this.state.mode == "game") {
-			if ((this.state.pass !== '') & (this.nextUpdate === false) & (this.state.stopUpdate === false) & (this.state.ask === false)) {
+			if ((this.state.pass !== '') & (this.nextUpdate === false) & (this.state.ask === false)) {
 				this.SendJSON();
 				this.PauseUpdate(false);
 			}				
