@@ -230,7 +230,6 @@ class Main extends React.Component {
 			let updated = false;
 			let fileNotFound = false;
 			let url="/hp/php/jsonload.php?filename=" + id;
-			console.log('JSON ');
 			if (id !== "start") {
 				console.log('запрашиваем JSON ' + id);
 				if (this.state.testmode) { url="/hp/test/test.json" }
@@ -378,11 +377,11 @@ class Main extends React.Component {
 		this.PauseUpdate = (f) => {
 			if (f) {
 				clearTimeout(this.nextUpdate); this.nextUpdate = false;
-				console.log('STOP update');
+				//console.log('STOP update');
 				this.setState({update: "off"});
 			} else {
-				this.nextUpdate = setTimeout(this.LoadJSONrepeat, 2000);
-				console.log('START update');
+				this.nextUpdate = setTimeout(this.LoadJSONrepeat, 500);
+				//console.log('START update');
 				this.setState({update: "on"});
 			}			
 		}
@@ -514,7 +513,7 @@ class Main extends React.Component {
 				this.setState({ "players": c, "yes": false, "version": +this.state.version+1 });
 			}
 			if ((this.state.pass !== '') & (this.state.update==="off") & (this.nextUpdate===false) & (this.state.ask === false) & (this.state.isLoaded===true)) {
-				console.log('Автозапуск');
+				//console.log('Автозапуск');
 				this.SendJSON();
 				this.PauseUpdate(false);
 			}			

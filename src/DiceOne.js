@@ -5,7 +5,8 @@ class DiceOne extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			display: "hidden"
+			display: "hidden",
+			dice: 0
 		};
 	}
 
@@ -14,7 +15,8 @@ class DiceOne extends React.Component {
 		console.log(this.context);
 		this.context.PauseUpdate((this.context.update==="on")?true:false);
 		let s = (this.state.display==="show")?"hidden":"show";
-		this.setState({ display: s});
+		let dice = this.context.tune.diceOne[0] * (Math.floor(Math.random() * this.context.tune.diceOne[1]) + 1);
+		this.setState({ display: s, dice:dice});
 	}
 
 	render() {
@@ -27,15 +29,14 @@ class DiceOne extends React.Component {
 				</div>
 			);
 		}
-		if (this.state.display == "show") {
-			let dice = this.context.tune.diceOne[0] * (Math.floor(Math.random() * this.context.tune.diceOne[1]) + 1);
+		if (this.state.display == "show") {			
 			return (
 				<div className="block dice">
 					<Button variant="fab" onClick={() => (this.clickAny())}>
 						<img src="/hp/icons/close.png" alt="X"></img>
 					</Button>
 					<Button className="topicon dicedropped" onClick={() => (this.clickAny())}>
-						{dice}
+						{this.state.dice}
 					</Button>
 				</div>
 			);
