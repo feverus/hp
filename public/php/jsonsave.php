@@ -55,9 +55,10 @@ if (($fcpass==$pass) or (!file_exists($filename))) {
 			}		
 			if (!file_exists($filename)) {
 				setcookie('hpcookie|'.$fc, $gamename.'|'.$pass.'|0', time()+(3600*24*50), '/');
-				$fcversion = 0;
-			}
-			$fcversion++;
+				$fcversion = 1;
+			} else {
+				$fcversion = $fcversionS;
+			}			
 			flock($file,LOCK_EX);
 			file_put_contents($filename, $fcversion."\r\n".$pass."\r\n".$data);
 			flock($file,LOCK_UN);
