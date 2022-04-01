@@ -30,7 +30,7 @@ class Table extends React.Component {
 		return (
 			<div className={st}>
 				{players_circle.map((player) => (
-					<div className="Card" key={player.id}>{this.renderCard(player.id)}</div>
+					<div className="Card animate__animated animate__zoomIn" key={player.id}>{this.renderCard(player.id)}</div>
 				))}
 			</div>
 		);
