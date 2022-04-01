@@ -240,7 +240,7 @@ class Main extends React.Component {
 				xhr.setRequestHeader("Cache-Control", "no-cache, no-store, max-age=0");
 				xhr.responseType = 'json';
 				xhr.send();
-				let result = await xhr.responseText;
+				let result = xhr.response;
 				console.log('version: local ' + this.state.version + ', server: ' + result.version);
 				if ((result.a !== '0') & (result.a !== '404')) {
 					if (this.state.version <= result.version) {
