@@ -238,9 +238,8 @@ class Main extends React.Component {
 				xhr.open("GET", url, false);
 				xhr.setRequestHeader("Content-Type", "application/json");
 				xhr.setRequestHeader("Cache-Control", "no-cache, no-store, max-age=0");
-				xhr.responseType = 'json';
 				xhr.send();
-				let result = xhr.response;
+				let result = xhr.response.json();
 				console.log('version: local ' + this.state.version + ', server: ' + result.version);
 				if ((result.a !== '0') & (result.a !== '404')) {
 					if (this.state.version <= result.version) {
