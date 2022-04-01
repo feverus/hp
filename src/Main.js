@@ -515,11 +515,9 @@ class Main extends React.Component {
 				})
 		}
 		if (this.state.mode == "game") {
-			if ((this.state.pass !== '') & (this.state.update==="off") & (this.state.ask === false)) {
-				console.log('Автозапуск');
-				this.SendJSON();
-				this.PauseUpdate(false);
-			}				
+			if (!this.state.isLoaded) {
+				this.LoadJSON();				
+			}	
 			//при согласии мастера завершаем раунд
 			if (this.state.yes) {
 				let c = this.playersCopy;
@@ -530,10 +528,13 @@ class Main extends React.Component {
 					c[id].common = t.commonname.map(() => 0);
 				});
 				this.setState({ "players": c, "yes": false });
-			}
-			if (!this.state.isLoaded) {
-				this.LoadJSON();				
-			}
+			}					
+			if ((this.state.pass !== '') & (this.state.update==="off") & (this.state.ask === false)) {
+				console.log('Автозапуск');
+				this.SendJSON();
+				this.PauseUpdate(false);
+			}			
+
 			let diceAllSrc = "/hp/icons/diceall.png";
 			if (this.state.players[0].dice !== -1) { diceAllSrc = "/hp/icons/diceclear.png"; }
 			return (

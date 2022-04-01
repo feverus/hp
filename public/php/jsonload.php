@@ -14,7 +14,7 @@ if (!file_exists($filename)) {
 
 $out = file($filename);
 $fileversion = trim($out[0]);
-if ($fcversion<$fileversion) {
+if ($fcversion<=$fileversion) {
 	if (preg_match_all('/"gamename":"([^"]+)"/si', $out, $matches, PREG_PATTERN_ORDER)!==false) {
 		$gamename = trim($matches[1][0]);	
 	} else {
