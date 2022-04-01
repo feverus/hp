@@ -10,11 +10,9 @@ class DiceOne extends React.Component {
 	}
 
 	clickAny() {
-		console.log('this.context.nextUpdate '+this.context.nextUpdate);
+		console.log('this.context.update '+this.context.update);
 		console.log(this.context);
-		if (this.context.players[0].dice === -1) {
-			this.context.PauseUpdate((this.context.nextUpdate!==false)?true:false);	
-		}
+		this.context.PauseUpdate((this.context.update==="on")?true:false);
 		let s = (this.state.display==="show")?"hidden":"show";
 		this.setState({ display: s});
 	}

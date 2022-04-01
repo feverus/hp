@@ -239,7 +239,7 @@ class Main extends React.Component {
 				.then((result) => {
 					console.log('version: local ' + this.state.version + ', server: ' + result.version);
 					if ((result.a !== '0') & (result.a !== '404')) {
-						if (this.state.version < result.version) {
+						if (this.state.version <= result.version) {
 							updated = true;
 							this.playersCopy = JSON.parse(JSON.stringify(result.players));
 
@@ -303,7 +303,8 @@ class Main extends React.Component {
 			} else {
 				console.log('start');
 				var date = new Date();
-				id = date.getDate() + '' + date.getMonth() + '' + date.getFullYear() + '-' + Math.floor(Math.random() * (1000000));
+				var month = +1+date.getMonth();
+				id = date.getDate() + '' + month + '' + date.getFullYear() + '-' + Math.floor(Math.random() * (1000000));
 				this.setState({
 					id: id,
 					isLoaded: true
@@ -312,7 +313,7 @@ class Main extends React.Component {
 			this.PauseUpdate(false);	
 		}
 		this.LoadJSONrepeat = () => {
-			if ((!this.state.testmode) & (this.nextUpdate !== false)) {
+			if ((!this.state.testmode) & (this.context.update==="on")) {
 				this.LoadJSON();
 			}
 		}
@@ -343,7 +344,7 @@ class Main extends React.Component {
 		//загрузка выбранной игры
 		this.GoGame = (nomer) => {
 			let c = this.state;
-			c.id = c.savedGames[nomer][0]; c.pass = c.savedGames[nomer][2]; c.version = c.savedGames[nomer][3]; c.mode = "game"; c.isLoaded=false;
+			c.id = c.savedGames[nomer][0]; c.pass = c.savedGames[nomer][2]; c.version = 0; c.mode = "game"; c.isLoaded=false;
 			this.setState(c);
 		}
 		//сброс игры и выход в Setup
@@ -394,15 +395,18 @@ class Main extends React.Component {
 			if (f) {
 				clearTimeout(this.nextUpdate); this.nextUpdate = false;
 				console.log('STOP update');
+				this.setState({update: "off"});
 			} else {
 				this.nextUpdate = setTimeout(this.LoadJSONrepeat, 5000);
 				console.log('START update');
+				this.setState({update: "on"});
 			}			
 		}
 		this.playersCopy = [];
 		this.nextUpdate = false;
 
 		this.state = {	
+			update: "off",
 			testmode: false,
 			mode: "setup",
 			id: "start",
@@ -484,7 +488,8 @@ class Main extends React.Component {
 		}
 		if ((this.state.id == "start") & (this.state.savedGames.length == 0)) {
 			var date = new Date();
-			let id = date.getDate() + '' + date.getMonth() + '' + date.getFullYear() + '-' + Math.floor(Math.random() * (1000000));
+			var month = +1+date.getMonth();
+			let id = date.getDate() + '' + month + '' + date.getFullYear() + '-' + Math.floor(Math.random() * (1000000));
 			//проверяем куки при запуске		
 			if (document.cookie.length > 0) {
 				let cookies = document.cookie.split(';');
@@ -510,7 +515,7 @@ class Main extends React.Component {
 				})
 		}
 		if (this.state.mode == "game") {
-			if ((this.state.pass !== '') & (this.nextUpdate === false) & (this.state.ask === false)) {
+			if ((this.state.pass !== '') & (this.context.update==="off") & (this.state.ask === false)) {
 				console.log('Автозапуск');
 				this.SendJSON();
 				this.PauseUpdate(false);
