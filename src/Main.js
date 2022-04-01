@@ -529,7 +529,7 @@ class Main extends React.Component {
 				});
 				this.setState({ "players": c, "yes": false });
 			}					
-			if ((this.state.pass !== '') & (this.state.update==="off") & (this.state.ask === false)) {
+			if ((this.state.pass !== '') & (this.state.update==="off") & (this.nextUpdate!==false) & (this.state.ask === false) & (this.state.isLoaded===true)) {
 				console.log('Автозапуск');
 				this.SendJSON();
 				this.PauseUpdate(false);
