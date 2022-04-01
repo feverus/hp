@@ -63,6 +63,7 @@ class Card extends React.Component {
 		let stDead = ((tune.winway == "lastalive") & (p.hp == 0)) ? "dead" : "";
 		let stMinMaxHp = (p.hp == this.context.low) ? "hp low" : "hp";
 		stMinMaxHp = (p.hp == this.context.high) ? "hp high" : stMinMaxHp;
+		stMinMaxHp = stMinMaxHp + "animate__animated animate__bounce";
 		return (
 			<div style={{ backgroundImage: 'linear-gradient(180deg, ' + p.color + '11, ' + p.color + ')' }} className={stDead}>
 				<div style={{ backgroundColor: p.color }}>
