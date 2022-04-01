@@ -305,7 +305,7 @@ class Main extends React.Component {
 			console.log('отправляем JSON на сервер '+this.state.id);
 			let xhr = new XMLHttpRequest();
 			let ver = this.state.version + 1; //если данные успешно сохранятся, обновим локальную версию
-			xhr.open("POST", "/hp/php/jsonsave.php?filename=" + this.state.id + "&pass=" + this.state.pass + "&version=" + this.state.version, false);
+			xhr.open("POST", "/hp/php/jsonsave.php?filename=" + this.state.id + "&pass=" + this.state.pass + "&version=" + ver, false);
 			xhr.setRequestHeader("Content-Type", "application/json");
 			var data = JSON.stringify({ "players": this.state.players, "tune": this.state.tune });
 			xhr.send(data);
@@ -381,7 +381,7 @@ class Main extends React.Component {
 				console.log('STOP update');
 				this.setState({update: "off"});
 			} else {
-				this.nextUpdate = setTimeout(this.LoadJSONrepeat, 200);
+				this.nextUpdate = setTimeout(this.LoadJSONrepeat, 2000);
 				console.log('START update');
 				this.setState({update: "on"});
 			}			
